@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
@@ -7,9 +7,13 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AiOutlineCloseCircle } from "react-icons/ai";
-
+import { LocationContext } from "./Welcome";
+import Main from "./Main";
 function Login({ setLoginModal, setSignUpModal, location }) {
   const navigate = useNavigate();
+
+  const locationval = useContext(LocationContext);
+  console.log({ locationval });
 
   const [phone, setPhone] = useState("");
   const [user, setUser] = useState(null);
@@ -32,13 +36,17 @@ function Login({ setLoginModal, setSignUpModal, location }) {
     try {
       const data = await user.confirm(otp);
       data.user.phoneNumber && toast.success("LoggedIn successfully");
-      data.user.phoneNumber &&
-        setTimeout(() => {
-          navigate("/main");
-        }, 200);
+      // data.user.phoneNumber &&
+      //   setTimeout(() => {
+      //     navigate(<Main />);
+      //   }, 200);
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const navigation = () => {
+    navigate(<Main />);
   };
 
   const clickfunction = () => {
@@ -100,7 +108,10 @@ function Login({ setLoginModal, setSignUpModal, location }) {
                 Verify Otp
               </button>
             )}
-            <button className="bg-blue-500 text-white p-5 font-semibold text-xs w-80 mt-4">
+            <button
+              onClick={navigation}
+              className="bg-blue-500 text-white p-5 font-semibold text-xs w-80 mt-4"
+            >
               LOGIN
             </button>
             <h1 className="text-xs font-medium mt-2">
